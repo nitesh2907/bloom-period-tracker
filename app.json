@@ -1,22 +1,46 @@
 {
   "expo": {
-    "name": "bloom",
-    "slug": "bloom",
+    "name": "Bloom",
+    "slug": "bloom-period-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "backgroundColor": "#FFF7F5",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.niteshkumar.bloom"
     },
     "android": {
+      "package": "com.niteshkumar.bloom",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#FDE5E9",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "permissions": [
+        "POST_NOTIFICATIONS"
+      ]
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#E04F6B",
+          "icon": "./assets/android-icon-monochrome.png"
+        }
+      ],
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#FFF7F5"
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     }
