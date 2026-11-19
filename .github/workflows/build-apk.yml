@@ -36,7 +36,12 @@ jobs:
 
       - name: Build release APK
         working-directory: android
-        run: ./gradlew assembleRelease --no-daemon
+        # 64-bit phones only + code/resource shrinking keeps the APK small
+        run: >
+          ./gradlew assembleRelease --no-daemon
+          -PreactNativeArchitectures=arm64-v8a
+          -Pandroid.enableMinifyInReleaseBuilds=true
+          -Pandroid.enableShrinkResourcesInReleaseBuilds=true
 
       - name: Read app version
         id: ver
@@ -44,6 +49,37 @@ jobs:
 
       - name: Rename APK
         run: cp android/app/build/outputs/apk/release/app-release.apk bloom.apk
+
+      - name: Put APK on the website (Cloudflare allows files up to 25 MB)
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+          v = os.environ["VERSION"]
+          size = os.path.getsize("bloom.apk")
+          mb = round(size / 1048576, 1)
+          print("APK size:", mb, "MB")
+          data = json.load(open("docs/version.json"))
+          data["latestVersion"] = v
+          data["apkSizeMB"] = mb
+          release = "https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk"
+          if size < 24.5 * 1048576:
+              import shutil
+              shutil.copy("bloom.apk", "docs/bloom.apk")
+              data["apkUrl"] = "bloom.apk?v=" + v
+              data["androidUrl"] = "https://bloom-period-tracker.pages.dev/bloom.apk?v=" + v
+          else:
+              data["apkUrl"] = release
+              data["androidUrl"] = release
+          json.dump(data, open("docs/version.json", "w"), indent=2)
+          PYEOF
+          cp docs/version.json version.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs version.json
+          git commit -m "Website: Bloom APK v$VERSION" || echo "nothing to commit"
+          git push
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
@@ -54,3 +90,4 @@ jobs:
             Download **bloom.apk** below and open it on your Android phone to install.
           files: bloom.apk
           make_latest: true
+          overwrite_files: true

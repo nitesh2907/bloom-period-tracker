@@ -186,7 +186,7 @@ footer a{color:var(--sub)}
       <a href="#privacy">Privacy</a>
       <a href="#install">Install</a>
       <a href="#faq">FAQ</a>
-      <a class="btn btn-rose btn-sm" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk">Download APK</a>
+      <a class="btn btn-rose btn-sm apk-link" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk" download="Bloom.apk">Download APK</a>
     </div>
   </div>
 </nav>
@@ -198,9 +198,9 @@ footer a{color:var(--sub)}
       <h1>Know your cycle.<br><em>Never</em> run out of pads.</h1>
       <p class="lead">Bloom tracks the gap between your periods, predicts the next one, tells you what to eat when it hurts, and reminds you before your pad stock runs low. Free, simple, and your data never leaves your phone.</p>
       <div class="cta-row">
-        <a class="store apk" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk">
+        <a class="store apk apk-link" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk" download="Bloom.apk">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22a11.4 11.4 0 0 0-9.84 0L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52ZM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"/></svg>
-          <span><small>Download for Android</small><b>Bloom APK</b></span>
+          <span><small>Download for Android</small><b>Bloom APK</b><small class="apk-meta"></small></span>
         </a>
       </div>
       <div class="trust"><span>100% free</span><span>No sign-up</span><span>Works offline</span><span>Android 7+</span></div>
@@ -347,9 +347,9 @@ footer a{color:var(--sub)}
     <h2>Ready to bloom?</h2>
     <p class="lead" style="margin:14px auto 0">Download the APK, install it, and take one worry off your mind every month.</p>
     <div class="cta-row">
-      <a class="store apk" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk">
+      <a class="store apk apk-link" href="https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk" download="Bloom.apk">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22a11.4 11.4 0 0 0-9.84 0L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52ZM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"/></svg>
-          <span><small>Download for Android</small><b>Bloom APK</b></span>
+          <span><small>Download for Android</small><b>Bloom APK</b><small class="apk-meta"></small></span>
         </a>
     </div>
     <p class="note">Free · Android 7.0 or newer · No account needed</p>
@@ -365,6 +365,11 @@ footer a{color:var(--sub)}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
+fetch('version.json',{cache:'no-store'}).then(r=>r.json()).then(v=>{
+  if(v.apkUrl) document.querySelectorAll('.apk-link').forEach(a=>a.href=v.apkUrl);
+  const meta='Version '+v.latestVersion+(v.apkSizeMB?' · '+v.apkSizeMB+' MB':'');
+  document.querySelectorAll('.apk-meta').forEach(s=>s.textContent=meta);
+}).catch(()=>{});
 
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>8),{passive:true});
