@@ -1,9 +1,9 @@
 {
-  "latestVersion": "1.0.0",
+  "latestVersion": "1.0.1",
   "message": "Bug fixes and a smoother calendar.",
   "mandatory": false,
-  "androidUrl": "https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk",
+  "androidUrl": "https://bloom-period-tracker.pages.dev/bloom.apk?v=1.0.1",
   "iosUrl": "https://apps.apple.com/app/id0000000000",
-  "apkSizeMB": 67.9,
-  "apkUrl": "https://github.com/nitesh2907/bloom-period-tracker/releases/latest/download/bloom.apk"
+  "apkSizeMB": 23.2,
+  "apkUrl": "bloom.apk?v=1.0.1"
 }
