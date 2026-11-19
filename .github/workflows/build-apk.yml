@@ -1,0 +1,56 @@
+name: Build APK and publish release
+
+# Run it from the "Actions" tab (Run workflow), or it runs by itself
+# when you push a change to the "version" in app.json.
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths: [app.json]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Generate Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build release APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Read app version
+        id: ver
+        run: echo "version=$(node -p "require('./app.json').expo.version")" >> "$GITHUB_OUTPUT"
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk bloom.apk
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: Bloom v${{ steps.ver.outputs.version }}
+          body: |
+            Download **bloom.apk** below and open it on your Android phone to install.
+          files: bloom.apk
+          make_latest: true
